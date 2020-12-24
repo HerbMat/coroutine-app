@@ -1,0 +1,13 @@
+spring:
+  data:
+    mongodb:
+      database: bank-database
+      host: localhost
+      port: 27017
+  security:
+    user:
+      name: test
+      password: test
+bank-application:
+  mongo:
+    load-data: true
