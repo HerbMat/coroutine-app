@@ -29,12 +29,18 @@ class MongoDataLoaderListener(
 
     override fun onApplicationEvent(event: ApplicationStartedEvent) {
         mono {
-            accountTypeRepository.deleteAll()
-            customerRepository.deleteAll()
-            transactionRepository.deleteAll()
-            accountTypeRepository.saveAll(MongoInitialDataLoader.getAccountTypes()).singleOrNull()
-            customerRepository.saveAll(MongoInitialDataLoader.getCustomers()).singleOrNull()
-            transactionRepository.saveAll(MongoInitialDataLoader.getTransactions(customerRepository, accountTypeRepository)).singleOrNull()
+            launch {
+                accountTypeRepository.deleteAll()
+                accountTypeRepository.saveAll(MongoInitialDataLoader.getAccountTypes()).singleOrNull()
+            }
+            launch {
+                customerRepository.deleteAll()
+                customerRepository.saveAll(MongoInitialDataLoader.getCustomers()).singleOrNull()
+            }
+            launch {
+                transactionRepository.deleteAll()
+                transactionRepository.saveAll(MongoInitialDataLoader.getTransactions()).singleOrNull()
+            }
         }.subscribe()
     }
 }

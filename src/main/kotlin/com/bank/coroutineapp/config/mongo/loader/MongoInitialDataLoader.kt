@@ -36,14 +36,14 @@ object MongoInitialDataLoader {
                 }
     }
 
-    suspend fun getTransactions(customerRepository: CustomerRepository, accountTypeRepository: AccountTypeRepository): List<Transaction> {
+    suspend fun getTransactions(): List<Transaction> {
         return CSVCollectionFileReader
                 .extractCollectionDataFromFile("transactions.csv")
                 .map { Transaction(
                         it["transaction_id"]!!,
                         (it["transaction_amount"] ?: "0").toBigDecimal(),
-                        accountTypeRepository.findById(it["account_type"]!!)!!,
-                        customerRepository.findById(it["customer_id"]!!)!!,
+                        it["account_type"]!!,
+                        it["customer_id"]!!,
                         LocalDateTime.parse(it["transaction_date"], formatter)
                 ) }
     }
